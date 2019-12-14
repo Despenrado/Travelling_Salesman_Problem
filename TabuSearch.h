@@ -13,7 +13,9 @@ public:
 	int dimension;
 	int tabuListMaxSize;
 	int bestChange[2];
-	TabuSearch(Graph&, int);
+	bool def;
+	TabuSearch(Graph&, int, bool);
+	TabuSearch(Graph&, int, int, int);
 	std::vector<int> getBestNeighbour(std::vector<int>);
 	void realization() override;
 	void stop() override;

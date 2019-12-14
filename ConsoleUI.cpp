@@ -69,6 +69,7 @@ void ConsoleUI::mainMenu()
 	}
 	if (s._Equal("6"))
 	{
+		tests = Test();
 		cinTestsProperies();
 		testsMenu();
 	}
@@ -88,8 +89,9 @@ void ConsoleUI::algorithmsListMenu()
 	cout << "Algorithm Menu" << endl
 		<< "1 - Brure Force" << endl
 		<< "2 - Branch And Bound" << endl
-		<< "3 - Tabu Search" << endl
+		<< "3 - Tabu Search dafault" << endl
 		<< "4 - Simulated Annealing" << endl
+		<< "5 - Tabu search anothe" << endl
 		<< "0 - Go Back" << endl;
 	string s = cinConsole();
 	if (s._Equal("1"))
@@ -98,9 +100,7 @@ void ConsoleUI::algorithmsListMenu()
 	}
 	if (s._Equal("3"))
 	{
-		//cout << "Enter Number" << endl;
-		//s = cinConsole();
-		algorithmMenu(new TabuSearch(graph, 8));
+		algorithmMenu(new TabuSearch(graph, 8, true));
 	}
 	if (s._Equal("2"))
 	{
@@ -109,6 +109,10 @@ void ConsoleUI::algorithmsListMenu()
 	if (s._Equal("4"))
 	{
 		algorithmMenu(new SimulatedAnnealing(graph));
+	}
+	if (s._Equal("5"))
+	{
+		algorithmMenu(new TabuSearch(graph, 8, false));
 	}
 	if (s._Equal("0"))
 	{
@@ -145,13 +149,21 @@ void ConsoleUI::printReport(Algorithm* alg)
 void ConsoleUI::algorithmMenu(Algorithm* alg)
 {
 
-		std::cout << std::endl << alg->fileName << std::endl
-			<< "1 - Start" << std::endl
-			<< "2 - Get best Way" << std::endl
-			<< "3 - Get time" << std::endl
-			<< "4 - Frint To File Results" << std::endl
-			<< "5 - Set Max Time" << std::endl
-			<< "0 - Go Back" << std::endl;
+	std::cout << std::endl << alg->fileName << std::endl
+		<< "1 - Start" << std::endl
+		<< "2 - Get best Way" << std::endl
+		<< "3 - Get time" << std::endl
+		<< "4 - Print To File Results" << std::endl
+		<< "5 - Set Max Time" << std::endl;	
+		if (alg->fileName == "TabuSearch")
+		{
+			cout << "6 - Set Size Of Tabu List" << endl;
+		}
+		if (alg->fileName == "SimulatedAnnealing")
+		{
+			cout << "6 - Set Temperature" << endl;
+		}
+		cout << "0 - Go Back" << std::endl;
 		std::cout << "$:";
 		std::string s;
 		std::cin >> s;
@@ -175,14 +187,28 @@ void ConsoleUI::algorithmMenu(Algorithm* alg)
 		}
 		if (s._Equal("5"))
 		{
-			alg->maxTimer = stoi(cinConsole());
+			
+			alg->maxTimer = stoi(cinConsole()) * 1000000;
+		}
+		if (s._Equal("6"))
+		{
+			if (alg->fileName == "TabuSearch")
+			{
+				cout << "Enter si" << endl;
+				alg->addParam.push_back(stoi(cinConsole()));
+			}
+			if (alg->fileName == "SimulatedAnnealing")
+			{
+				cout << "Enter a*1000" << endl;
+				alg->addParam.push_back(stoi(cinConsole()));
+			}
 		}
 		if (s._Equal("0"))
 		{
 			delete alg;
 			return;
 		}
-		if (!s._Equal("0") && !s._Equal("1") && !s._Equal("2") && !s._Equal("3") && !s._Equal("4") && !s._Equal("5"))
+		if (!s._Equal("0") && !s._Equal("1") && !s._Equal("2") && !s._Equal("3") && !s._Equal("4") && !s._Equal("5") && !s._Equal("6"))
 		{
 			std::cout << "	Wrong value!" << std::endl;
 		}
@@ -217,12 +243,24 @@ void ConsoleUI::testsMenu()
 	}
 	if (s._Equal("3"))
 	{
+		tests.param.clear();
+		cout << "Enter Time" << endl;
+		tests.param.push_back(stoi(cinConsole()) * 1000000);
+		cout << "Enter si" << endl;
+		tests.param.push_back(stoi(cinConsole()));
+		cout << "0 default; 1 - another" << endl;
+		tests.param.push_back(stoi(cinConsole()));
 		tests.algorithmType = 3;
 		tests.algorithmThread();
 		tests.printResultsToFile();
 	}
 	if (s._Equal("4"))
 	{
+		tests.param.clear();
+		cout << "Enter Time" << endl;
+		tests.param.push_back(stoi(cinConsole()) * 1000000);
+		cout << "Enter a*1000" << endl;
+		tests.param.push_back(stoi(cinConsole()));
 		tests.algorithmType = 4;
 		tests.algorithmThread();
 		tests.printResultsToFile();
@@ -246,11 +284,29 @@ void ConsoleUI::testsMenu()
 
 void ConsoleUI::cinTestsProperies()
 {
-	std::cout << "Enter number of repeat" << std::endl << "$:";
 	std::string s;
+	while (true)
+	{
+		std::cout << std::endl << "Test Menu" << std::endl
+			<< "1 - Read from File" << endl
+			<< "2 - Generate random graph" << endl;
+		std::cout << "$:";
+		std::cin >> s;
+		if (s._Equal("1"))
+		{
+			tests.graph = new Graph(true);
+			break;
+		}
+		if (s._Equal("2"))
+		{
+			std::cout << "Enter number Nodes" << std::endl << "$:";
+			std::cin >> s;
+			tests.numNodes = std::stoi(s);
+			break;
+		}
+	}
+	std::cout << "Enter number of repeat" << std::endl << "$:";
 	std::cin >> s;
 	tests.numRepeat = std::stoi(s);
-	std::cout << "Enter number Nodes" << std::endl << "$:";
-	std::cin >> s;
-	tests.numNodes = std::stoi(s);
+
 }

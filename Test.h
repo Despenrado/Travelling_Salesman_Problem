@@ -21,8 +21,10 @@ public:
 	void clear();
 	long double getAVGTime();
 
+	std::vector<int> param;
 	int numRepeat;
-	int numNodes;
+	int numNodes = -1;
+	Graph* graph;
 	std::vector<unsigned long long> timeVec;
 	std::vector<std::string> vecResults;
 	int algorithmType; //1 - bruteforce, 2 - , 3 - , 4 - , 5 - 

@@ -4,8 +4,17 @@ unsigned long BruteForce::calulateNumberOfPermutation(unsigned long N)
 {
 	if (N == 0) 
 		return 1; 
-	else 
-		return N * calulateNumberOfPermutation(N - 1);
+	else
+	{
+		try
+		{
+			return N * calulateNumberOfPermutation(N - 1);
+		}
+		catch (const std::exception&)
+		{
+			return ULLONG_MAX;
+		}
+	}
 }
 
 BruteForce::BruteForce(Graph& graph)

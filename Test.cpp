@@ -14,6 +14,7 @@ void Test::algorithmThread()
 		Algorithm *algorithm = generateAlgorithm();
 		algorithm->start();
 		vecResults.push_back(algorithm->getReport());
+		std::cout << algorithm->getReport() << std::endl;
 		timeVec.push_back(algorithm->timer.getDeltataTime());
 		delete algorithm;
 		/*Graph graph(5);
@@ -30,27 +31,53 @@ void Test::algorithmThread()
 
 Algorithm* Test::generateAlgorithm()
 {
-	switch (algorithmType)
+	if (numNodes > 0)
 	{
-	case 1: {
-		return new BruteForce(*generateGraph(numNodes));
-		break;
-	}case 2: {
-		return new BranchAndBound(*generateGraph(numNodes));;
-		break;
-	}case 3: {
-		
-		return new TabuSearch(*generateGraph(numNodes),7);
-		break;
-	}case 4: {
-		return new SimulatedAnnealing(*generateGraph(numNodes));
-		break;
-	}case 5: {
+		switch (algorithmType)
+		{
+		case 1: {
+			return new BruteForce(*generateGraph(numNodes));
+			break;
+		}case 2: {
+			return new BranchAndBound(*generateGraph(numNodes));;
+			break;
+		}case 3: {
+			return new TabuSearch(*generateGraph(numNodes), param[1], param[0], param[2]);
+			break;
+		}case 4: {
+			return new SimulatedAnnealing(*generateGraph(numNodes), param[0], param[1]);
+			break;
+		}case 5: {
 
-		break;
+			break;
+		}
+		default:
+			break;
+		}
 	}
-	default:
-		break;
+	else
+	{
+		switch (algorithmType)
+		{
+		case 1: {
+			return new BruteForce(*graph);
+			break;
+		}case 2: {
+			return new BranchAndBound(*graph);;
+			break;
+		}case 3: {
+			return new TabuSearch(*graph, param[1], param[0], param[2]);
+			break;
+		}case 4: {
+			return new SimulatedAnnealing(*graph, param[0], param[1]);
+			break;
+		}case 5: {
+
+			break;
+		}
+		default:
+			break;
+		}
 	}
 	
 	return nullptr;

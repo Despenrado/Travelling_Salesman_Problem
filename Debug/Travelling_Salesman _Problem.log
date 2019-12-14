@@ -1,0 +1,8 @@
+﻿  TabuSearch.cpp
+F:\Programing\C++\Projects\Travelling_Salesman_Problem\TabuSearch.cpp(108,22): warning C4018: '<': signed/unsigned mismatch
+F:\Programing\C++\Projects\Travelling_Salesman_Problem\TabuSearch.cpp(111,25): warning C4018: '<': signed/unsigned mismatch
+F:\Programing\C++\Projects\Travelling_Salesman_Problem\TabuSearch.cpp(124,53): warning C4244: '=': conversion from 'unsigned __int64' to 'int', possible loss of data
+F:\Programing\C++\Projects\Travelling_Salesman_Problem\TabuSearch.cpp(151,50): warning C4244: '=': conversion from 'unsigned __int64' to 'int', possible loss of data
+F:\Programing\C++\Projects\Travelling_Salesman_Problem\TabuSearch.cpp(182,49): warning C4244: '=': conversion from 'unsigned __int64' to 'int', possible loss of data
+F:\Programing\C++\Projects\Travelling_Salesman_Problem\TabuSearch.cpp(200,22): warning C4018: '<': signed/unsigned mismatch
+  Travelling_Salesman _Problem.vcxproj -> F:\Programing\C++\Projects\Travelling_Salesman_Problem\Debug\Travelling_Salesman _Problem.exe

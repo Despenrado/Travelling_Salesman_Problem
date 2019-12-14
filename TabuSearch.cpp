@@ -1,10 +1,27 @@
 #include "TabuSearch.h"
 
-TabuSearch::TabuSearch(Graph& graph, int tabuListMaxSize)
+TabuSearch::TabuSearch(Graph& graph, int tabuListMaxSize, bool defal)
 {
 	this->graph = graph;
 	this->tabuListMaxSize = tabuListMaxSize;
 	this->fileName = "TabuSearch";
+	this->def = defal;
+}
+
+TabuSearch::TabuSearch(Graph& graph, int tabuListMaxSize, int time, int defal)
+{
+	this->graph = graph;
+	this->tabuListMaxSize = tabuListMaxSize;
+	this->fileName = "TabuSearch";
+	maxTimer = time;
+	if (defal == 1)
+	{
+		this->def = false;
+	}
+	else
+	{
+		this->def = true;
+	}
 }
 
 std::vector<int> TabuSearch::getBestNeighbour(std::vector<int> order)
@@ -39,7 +56,14 @@ std::vector<int> TabuSearch::getBestNeighbour(std::vector<int> order)
 
 void TabuSearch::realization()
 {
-	tabu();
+	if (def)
+	{
+		tabu();
+	}
+	else
+	{
+		tabu2();
+	}
 }
 
 void TabuSearch::stop()
@@ -50,6 +74,10 @@ void TabuSearch::stop()
 
 void TabuSearch::setAllOnZero()
 {
+	if (addParam.size() > 0)
+	{
+		tabuListMaxSize = addParam[0];
+	}
 	tabuListMatrix.clear();
 	for (int i = 0; i < graph.N+1; i++)
 	{
@@ -59,6 +87,7 @@ void TabuSearch::setAllOnZero()
 			tabuListMatrix[i].push_back(0);
 		}
 	}
+	tmpWay.clear();
 	tabuList.clear();
 	dimension = 0;
 	bestWay.clear();
@@ -68,49 +97,62 @@ void TabuSearch::setAllOnZero()
 
 void TabuSearch::tabu2()
 {
-	int orderNotChanged = 0;
+	int orderNotChanged = 100;
 
 	tmpWay = bestWay;
-	do
+	std::vector<int> tmpBest = tmpWay;
+	while(this->maxTimer > this->timer.getTimeFromStart())
 	{
-		for (int i3 = 0; i3 < sqrt(bestWay.size()); i3++)
+		for (int i3 = 0; i3 < sqrt(bestWay.size()) && this->maxTimer > this->timer.getTimeFromStart(); i3++)
 		{
-			for (int i = 1; i < bestWay.size() - 1; i++)
+			for (int i = 1; i < bestWay.size() - 1 && this->maxTimer > this->timer.getTimeFromStart(); i++)
 			{
-				std::vector<int> vec = tmpWay;
+				std::vector<int> vec = tmpBest;
 				for (int i2 = 1; i2 < bestWay.size() - 1; i2++)
 				{
 					swap(vec, i, i2);
-					if (tabuListMatrix[i][i2] == 0 && getWayValue(vec) < getWayValue(tmpWay))
+					int tmpValue = getWayValue(vec);
+					if (tabuListMatrix[i][i2] == 0 && getWayValue(vec) < getWayValue(tmpBest))
 					{
-						tmpWay = vec;
+						tmpBest = vec;
 						bestChange[0] = i;
 						bestChange[1] = i2;
+						orderNotChanged = 0;
+						if (tmpValue < getWayValue(tmpWay))
+						{
+							tmpWay = vec;
+							countOperation = this->timer.getTimeFromStart();
+						}
+						
 					}
 					else
 					{
 						insert(bestChange[0], bestChange[1]);
+						orderNotChanged++;
 					}
 					swap(vec, i, i2);
 				}
 			}
-			int randomCity = rand() % (graph.N - 1) + 1;		//generujemy dwie wartoœci ró¿ne od zera oraz od siebie
+		}
+		if (orderNotChanged > 100)
+		{
+			int randomCity = rand() % (graph.N - 1) + 1;
 			int anotherRandomCity = rand() % (graph.N - 1) + 1;
 			while (randomCity == anotherRandomCity)
 			{
 				anotherRandomCity = rand() % (graph.N - 1) + 1;
 			}
-			std::vector<int> vec = tmpWay;
+			std::vector<int> vec = tmpBest;
 			swap(vec, randomCity, anotherRandomCity);
 
-			if (!(tabuListMatrix[randomCity][anotherRandomCity] == 1) && getWayValue(vec) < getWayValue(tmpWay))
-			{
-				tmpWay = vec;
+				tmpBest = vec;
 				bestChange[0] = randomCity;
 				bestChange[1] = anotherRandomCity;
-			}
+				countOperation = this->timer.getTimeFromStart();
+				insert(bestChange[0], bestChange[1]);
+				orderNotChanged++;
 		}
-	} while (getWayValue(bestWay) < getWayValue(tmpWay));
+	}
 	bestWay = tmpWay;
 }
 
@@ -120,56 +162,32 @@ void TabuSearch::tabu()
 	int orderNotChanged = 0;
 
 	tmpWay = bestWay;
-	do
+	while (this->maxTimer > this->timer.getTimeFromStart())
 	{
-		for (int i3 = 0; i3 < sqrt(bestWay.size()); i3++)
+		int randNode1 = rand() % (graph.N - 1) + 1;
+		int randNode2 = rand() % (graph.N - 1) + 1;
+		while (randNode1 == randNode2)
 		{
-			for (int i = 1; i < bestWay.size() - 1; i++)
-			{
-				std::vector<int> vec = tmpWay;
-				for (int i2 = 1; i2 < bestWay.size() - 1; i2++)
-				{
-					int randomCity = rand() % (graph.N - 1) + 1;		//generujemy dwie wartoœci ró¿ne od zera oraz od siebie
-					int anotherRandomCity = rand() % (graph.N - 1) + 1;
-					while (randomCity == anotherRandomCity)
-					{
-						anotherRandomCity = rand() % (graph.N - 1) + 1;
-					}
-					std::vector<int> vec = tmpWay;
-					swap(vec, randomCity, anotherRandomCity);
-
-					if (!(tabuListMatrix[randomCity][anotherRandomCity] == 1) && getWayValue(vec) < getWayValue(tmpWay))
-					{
-						tmpWay = vec;
-						bestChange[0] = randomCity;
-						bestChange[1] = anotherRandomCity;
-						orderNotChanged = 0;
-					}
-					else
-					{
-						orderNotChanged++;
-						insert(bestChange[0], bestChange[1]);
-					}
-					swap(vec, randomCity, anotherRandomCity);
-				}
-			}
-			int randomCity = rand() % (graph.N - 1) + 1;		//generujemy dwie wartoœci ró¿ne od zera oraz od siebie
-			int anotherRandomCity = rand() % (graph.N - 1) + 1;
-			while (randomCity == anotherRandomCity)
-			{
-				anotherRandomCity = rand() % (graph.N - 1) + 1;
-			}
-			std::vector<int> vec = tmpWay;
-			swap(vec, randomCity, anotherRandomCity);
-
-			if (!(tabuListMatrix[randomCity][anotherRandomCity] == 1) && getWayValue(vec) < getWayValue(tmpWay))
-			{
-				tmpWay = vec;
-				bestChange[0] = randomCity;
-				bestChange[1] = anotherRandomCity;
-			}
+			randNode2 = rand() % (graph.N - 1) + 1;
 		}
-	} while (getWayValue(bestWay) < getWayValue(tmpWay) && orderNotChanged < 100);
+		std::vector<int> vec = tmpWay;
+		swap(vec, getNodeIndex(vec, randNode1), getNodeIndex(vec, randNode2));
+		//std::cout << delta << std::endl;
+		if (!(tabuListMatrix[randNode1][randNode2] == 1) && getWayValue(vec) <= getWayValue(tmpWay))
+		{
+			tmpWay = vec;
+			bestChange[0] = randNode1;
+			bestChange[1] = randNode2;
+			//orderNotChanged = 0;
+			countOperation = this->timer.getTimeFromStart();
+			
+		}
+		else
+		{
+			insert(bestChange[0], bestChange[1]);
+		}
+		swap(vec, randNode1, randNode2);
+	}
 	bestWay = tmpWay;
 }
 

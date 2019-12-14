@@ -1,0 +1,20 @@
+[ 0 3 2 4 1 0  ]
+lenth = 216; Evalution = 31; time is: 5186
+[ 0 2 3 1 4 0  ]
+lenth = 181; Evalution = 57; time is: 8222
+[ 0 3 2 4 1 0  ]
+lenth = 123; Evalution = 25; time is: 3762
+[ 0 1 2 3 4 0  ]
+lenth = 120; Evalution = 37; time is: 5315
+[ 0 4 2 3 1 0  ]
+lenth = 124; Evalution = 25; time is: 3995
+[ 0 4 1 2 3 0  ]
+lenth = 115; Evalution = 37; time is: 5358
+[ 0 4 1 2 3 0  ]
+lenth = 207; Evalution = 25; time is: 4827
+[ 0 2 4 3 1 0  ]
+lenth = 159; Evalution = 25; time is: 3601
+[ 0 3 4 1 2 0  ]
+lenth = 252; Evalution = 90; time is: 13330
+[ 0 4 2 1 3 0  ]
+lenth = 181; Evalution = 25; time is: 3653

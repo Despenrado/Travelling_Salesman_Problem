@@ -89,64 +89,126 @@ std::string Graph::getFileName()
 
 void Graph::loadFromFile()
 {
-	std::vector<std::string>* tmp = new std::vector<std::string>;
-	std::ifstream fin;
-	fin.open(getFileName());
-
-	if (fin.is_open())
+	try
 	{
-		std::string s;
-		int i2 = 0;
-		if (!fin.eof())
+		std::vector<std::string>* tmp = new std::vector<std::string>;
+		std::ifstream fin;
+		std::string filename = getFileName();
+		fin.open(filename);
+
+		if (fin.is_open())
 		{
-			s = "";
-			fin >> s;
-			tmp = My_Environment::line_Split(s, ';');
-			this->N = std::stoi(tmp->at(0));
-			if (tmp->size() > 1)
+			std::string s;
+			int i2 = 0;
+			if (My_Environment::line_Split(filename, '.')->at(1)._Equal("txt"))
 			{
-				this->firstNode = std::stoi(tmp->at(1));
-				//this->lastNode = std::stoi(tmp->at(2));
+				if (!fin.eof())
+				{
+					s = "";
+					fin >> s;
+					tmp = My_Environment::line_Split(s, ';');
+					this->N = std::stoi(tmp->at(0));
+					if (tmp->size() > 1)
+					{
+						this->firstNode = std::stoi(tmp->at(1));
+						//this->lastNode = std::stoi(tmp->at(2));
+					}
+					else
+					{
+						this->firstNode = 0;
+						//this->lastNode = this->N - 1;
+					}
+				}
 			}
 			else
 			{
-				this->firstNode = 0;
-				//this->lastNode = this->N - 1;
+				if (My_Environment::line_Split(filename, '.')->at(1)._Equal("atsp"))
+				{
+					this->firstNode = 0;
+					do
+						fin >> s;
+					while (s != "DIMENSION:");
+
+					fin >> s;
+					this->N = std::stoi(s);
+
+					do
+						fin >> s;
+					while (s != "EDGE_WEIGHT_TYPE:");
+
+					fin >> s;
+					if (s != "EXPLICIT")
+					{
+						std::cout << "UNKNOWN FORMAT " << s << " +++" << std::endl;
+						return;
+					}
+
+					do
+						fin >> s;
+					while (s != "EDGE_WEIGHT_SECTION");
+				}
+				else
+				{
+					fin.close();
+					std::cout << "File type not correct" << std::endl;
+					return;
+				}
 			}
 			for (int i = 0; i < N; i++)
 			{
 				matrix.push_back(std::vector<int>());
 			}
+			int i = 0;
+			while (!fin.eof())
+			{
+				s = "";
+				fin >> s;
+				if (s._Equal("#") || s._Equal("EOF"))
+				{
+					fin.close();
+					std::cout << "successful" << std::endl;
+					return;
+				}
 
+				if (matrix[i2].size() == N)
+				{
+					i2++;
+					i = 0;
+				}
+				if (s.size() > 0)
+				{
+					//std::cout << s << std::endl;
+					try
+					{
+						int tmpInt = std::stoi(s);
+						if (i2 == i)
+						{
+							tmpInt = -1;
+						}
+						i++;
+						matrix[i2].push_back(tmpInt);
+					}
+					catch (std::invalid_argument & e)
+					{
+						std::cout << "invalid_argument" << std::endl;
+					}
+					catch (std::out_of_range & e)
+					{
+						std::cout << e.what() << std::endl;
+					}
+				}
+
+			}
 		}
-		while (!fin.eof())
+		else
 		{
-			s = "";
-			fin >> s;
-			if (s._Equal("#"))
-			{
-				fin.close();
-				std::cout << "successful" << std::endl;
-				return;
-			}
-			
-			if(matrix[i2].size() == N)
-			{
-				i2++;
-			}
-			if (s.size() > 0)
-			{
-				//std::cout << s << std::endl;
-				matrix[i2].push_back(std::stoi(s));
-			}
-				
+			std::cout << "ERROR file can't open" << std::endl;
 		}
 	}
-	else
+	catch (std::ifstream::failure e)
 	{
-		std::cout << "ERROR file can't open" << std::endl;
+		std::cout << "Exception opening/reading/closing file\n";
 	}
-
 
 }
 

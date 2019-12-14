@@ -37,8 +37,8 @@ public:
 	int countOperation = 0;
 	std::string fileName;
 	bool running = false;
-	unsigned long long maxTimer = 0;
-
+	unsigned long long maxTimer = 600*1000000;
+	std::vector<int> addParam;
 };
 
 

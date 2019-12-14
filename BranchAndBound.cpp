@@ -5,7 +5,16 @@ unsigned long BranchAndBound::calulateNumberOfPermutation(unsigned long N)
 	if (N == 0)
 		return 1;
 	else
-		return N * calulateNumberOfPermutation(N - 1);
+	{
+		try
+		{
+			return N * calulateNumberOfPermutation(N - 1);
+		}
+		catch (const std::exception&)
+		{
+			return ULLONG_MAX;
+		}
+	}
 }
 
 BranchAndBound::BranchAndBound(Graph& graph)
