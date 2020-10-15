@@ -31,7 +31,7 @@ void Test::algorithmThread()
 
 Algorithm* Test::generateAlgorithm()
 {
-	if (numNodes > 0)
+	if (graph.N == -1)
 	{
 		switch (algorithmType)
 		{
@@ -39,7 +39,7 @@ Algorithm* Test::generateAlgorithm()
 			return new BruteForce(*generateGraph(numNodes));
 			break;
 		}case 2: {
-			return new BranchAndBound(*generateGraph(numNodes));;
+			return new BranchAndBound(*generateGraph(numNodes));
 			break;
 		}case 3: {
 			return new TabuSearch(*generateGraph(numNodes), param[1], param[0], param[2]);
@@ -48,7 +48,7 @@ Algorithm* Test::generateAlgorithm()
 			return new SimulatedAnnealing(*generateGraph(numNodes), param[0], param[1]);
 			break;
 		}case 5: {
-
+			return new Genetic(*generateGraph(numNodes), param[0], param[1], param[2], param[3], param[4], param[5]);
 			break;
 		}
 		default:
@@ -60,19 +60,19 @@ Algorithm* Test::generateAlgorithm()
 		switch (algorithmType)
 		{
 		case 1: {
-			return new BruteForce(*graph);
+			return new BruteForce(graph);
 			break;
 		}case 2: {
-			return new BranchAndBound(*graph);;
+			return new BranchAndBound(graph);
 			break;
 		}case 3: {
-			return new TabuSearch(*graph, param[1], param[0], param[2]);
+			return new TabuSearch(graph, param[1], param[0], param[2]);
 			break;
 		}case 4: {
-			return new SimulatedAnnealing(*graph, param[0], param[1]);
+			return new SimulatedAnnealing(graph, param[0], param[1]);
 			break;
 		}case 5: {
-
+			return new Genetic(graph, param[0], param[1], param[2], param[3], param[4], param[5]);
 			break;
 		}
 		default:
@@ -117,4 +117,5 @@ long double Test::getAVGTime()
 	}
 	return tmp/numRepeat;
 }
+
 

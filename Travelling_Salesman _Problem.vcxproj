@@ -157,6 +157,7 @@
     <ClCompile Include="BruteForce1.cpp" />
     <ClCompile Include="ConsoleUI.cpp" />
     <ClCompile Include="DynamicProg.cpp" />
+    <ClCompile Include="Genetic.cpp" />
     <ClCompile Include="Graph.cpp" />
     <ClCompile Include="SimulatedAnnealing.cpp" />
     <ClCompile Include="TabuSearch.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="BruteForce1.h" />
     <ClInclude Include="ConsoleUI.h" />
     <ClInclude Include="DynamicProg.h" />
+    <ClInclude Include="Genetic.h" />
     <ClInclude Include="Graph.h" />
     <ClInclude Include="My_Environment.h" />
     <ClInclude Include="SimulatedAnnealing.h" />

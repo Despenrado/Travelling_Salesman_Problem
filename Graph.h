@@ -25,6 +25,5 @@ public:
 	std::string getFileName();
 	void loadFromFile();
 	void printToFile();
-	~Graph();
 };
 

@@ -9,6 +9,7 @@
 #include "BranchAndBound.h"
 #include "TabuSearch.h"
 #include "SimulatedAnnealing.h"
+#include "Genetic.h"
 class Test
 {
 public:
@@ -24,9 +25,9 @@ public:
 	std::vector<int> param;
 	int numRepeat;
 	int numNodes = -1;
-	Graph* graph;
+	Graph graph;
 	std::vector<unsigned long long> timeVec;
 	std::vector<std::string> vecResults;
-	int algorithmType; //1 - bruteforce, 2 - , 3 - , 4 - , 5 - 
+	int algorithmType; //1 - bruteforce, 2 - , 3 - , 4 - , 5 - ;
 };
 

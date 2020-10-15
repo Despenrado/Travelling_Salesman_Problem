@@ -8,13 +8,13 @@
 #include "BranchAndBound.h"
 #include "TabuSearch.h"
 #include "SimulatedAnnealing.h"
+#include "Genetic.h"
 
 using namespace std;
 class ConsoleUI
 {
 public:
 	ConsoleUI();
-	~ConsoleUI();
 	void loandingProcess();
 	string cinConsole();
 	void printMatrix(vector<vector<int>>);

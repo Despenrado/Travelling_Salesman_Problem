@@ -1,6 +1,9 @@
 // Travelling_Salesman _Problem.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
+//#define _CRTDBG_MAP_ALLOC 
+//#include <stdlib.h>
+//#include <crtdbg.h>
 #include <iostream>
 #include "ConsoleUI.h"
 #include "Algorithm.h"
@@ -12,20 +15,22 @@ int main()
 	std::cout <<
 		std::endl << "######################################################################################################################" <<
 		std::endl << "##==================================================================================================================##" <<
-		std::endl << "##=================================            PEA      projekt 1           ========================================##" <<
+		std::endl << "##=================================            PEA      projekt             ========================================##" <<
 		std::endl << "##=================================            Nikita  Stepanenko           ========================================##" <<
 		std::endl << "##=================================            Nr. albomu: 245816           ========================================##" <<
 		std::endl << "##==================================================================================================================##" <<
 		std::endl << "######################################################################################################################" <<
 		std::endl << "Program is running" << std::endl << std::endl << std::endl;
-	//srand(time(0)); [ 0 5 1 4 3 2 6 8 7 0  ][ 0 5 1 4 3 2 6 8 7 0  ]
-	new ConsoleUI();
+	srand(time(0));
+	//std::cout << (double)1/RAND_MAX << endl;
+	ConsoleUI *ui = new ConsoleUI();
+	delete ui;
 
 	/*Graph g(12);
 	BnB bab(g);
 	bab.start();
 	std::cout << bab.getReport();*/
-	
+	//std::cout << _CrtDumpMemoryLeaks() << std::endl;
 	return 0;
 }
 

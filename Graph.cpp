@@ -22,6 +22,7 @@ int Graph::getFirstNode()
 
 Graph::Graph()
 {
+	N = -1;
 }
 
 Graph::Graph(bool)
@@ -76,6 +77,7 @@ void Graph::setN(int n)
 void Graph::setMatrix(std::vector<std::vector<int>> *newMatrix)
 {
 	this->matrix = *newMatrix;
+	delete newMatrix;
 }
 
 std::string Graph::getFileName()
@@ -204,6 +206,11 @@ void Graph::loadFromFile()
 		{
 			std::cout << "ERROR file can't open" << std::endl;
 		}
+		if (fin.is_open())
+		{
+			fin.close();
+		}
+		delete tmp;
 	}
 	catch (std::ifstream::failure e)
 	{
@@ -231,7 +238,3 @@ void Graph::printToFile()
 	std::cout << "successful" << std::endl;
 }
 
-Graph::~Graph()
-{
-	matrix.~vector();
-}

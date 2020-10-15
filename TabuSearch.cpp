@@ -58,11 +58,11 @@ void TabuSearch::realization()
 {
 	if (def)
 	{
-		tabu();
+		tabu2();
 	}
 	else
 	{
-		tabu2();
+		tabu();
 	}
 }
 
@@ -97,7 +97,7 @@ void TabuSearch::setAllOnZero()
 
 void TabuSearch::tabu2()
 {
-	int orderNotChanged = 100;
+	int orderNotChanged = 0;
 
 	tmpWay = bestWay;
 	std::vector<int> tmpBest = tmpWay;
@@ -112,7 +112,7 @@ void TabuSearch::tabu2()
 				{
 					swap(vec, i, i2);
 					int tmpValue = getWayValue(vec);
-					if (tabuListMatrix[i][i2] == 0 && getWayValue(vec) < getWayValue(tmpBest))
+					if (tabuListMatrix[i][i2] == 0 && tmpValue < getWayValue(tmpBest))
 					{
 						tmpBest = vec;
 						bestChange[0] = i;
@@ -146,11 +146,18 @@ void TabuSearch::tabu2()
 			swap(vec, randomCity, anotherRandomCity);
 
 				tmpBest = vec;
-				bestChange[0] = randomCity;
-				bestChange[1] = anotherRandomCity;
-				countOperation = this->timer.getTimeFromStart();
-				insert(bestChange[0], bestChange[1]);
-				orderNotChanged++;
+				//countOperation = this->timer.getTimeFromStart();
+
+				orderNotChanged = 0;
+
+				tabuList.clear();
+				for (int i = 0; i < tabuListMatrix.size(); i++)
+				{
+					for (int i2 = 0; i2 < tabuListMatrix.size(); i2++)
+					{
+						tabuListMatrix[i][i2] = 0;
+					}
+				}
 		}
 	}
 	bestWay = tmpWay;
@@ -160,7 +167,7 @@ void TabuSearch::tabu()
 {
 
 	int orderNotChanged = 0;
-
+	countOperation = 0;
 	tmpWay = bestWay;
 	while (this->maxTimer > this->timer.getTimeFromStart())
 	{
@@ -173,22 +180,40 @@ void TabuSearch::tabu()
 		std::vector<int> vec = tmpWay;
 		swap(vec, getNodeIndex(vec, randNode1), getNodeIndex(vec, randNode2));
 		//std::cout << delta << std::endl;
-		if (!(tabuListMatrix[randNode1][randNode2] == 1) && getWayValue(vec) <= getWayValue(tmpWay))
+			//countOperation++;
+		if (!(tabuListMatrix[randNode1][randNode2] == 1) && getWayValue(vec) < getWayValue(tmpWay))
 		{
 			tmpWay = vec;
 			bestChange[0] = randNode1;
 			bestChange[1] = randNode2;
-			//orderNotChanged = 0;
+			orderNotChanged = 0;
 			countOperation = this->timer.getTimeFromStart();
 			
 		}
 		else
 		{
+			orderNotChanged++;
 			insert(bestChange[0], bestChange[1]);
 		}
-		swap(vec, randNode1, randNode2);
+		//swap(vec, randNode1, randNode2);
+		if (orderNotChanged >= 100)
+		{
+			orderNotChanged = 0;
+			tabuList.clear();
+			for (int i = 0; i < tabuListMatrix.size(); i++)
+			{
+				for (int i2 = 0; i2 < tabuListMatrix.size(); i2++)
+				{
+					tabuListMatrix[i][i2] = 0;
+				}
+			}
+		}
 	}
-	bestWay = tmpWay;
+	if (getWayValue(bestWay) >= getWayValue(tmpWay)) 
+	{
+
+		bestWay = tmpWay;
+	}
 }
 
 void TabuSearch::insert(int vertexA, int vertexB)

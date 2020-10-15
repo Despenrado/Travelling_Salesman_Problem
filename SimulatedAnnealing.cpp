@@ -1,6 +1,5 @@
 #include "SimulatedAnnealing.h"
 #include <corecrt_math_defines.h>
-#include <cmath>
 
 SimulatedAnnealing::SimulatedAnnealing(Graph& graph)
 {
@@ -11,7 +10,7 @@ SimulatedAnnealing::SimulatedAnnealing(Graph& graph)
 SimulatedAnnealing::SimulatedAnnealing(Graph& graph, int time, int other)
 {
 	this->graph = graph;
-	this->fileName = "TabuSearch";
+	this->fileName = "SimulatedAnnealing";
 	maxTimer = time;
 	tempFactor = (double)other/1000;
 	//std::cout << tempFactor << std::endl;
@@ -31,16 +30,9 @@ void SimulatedAnnealing::stop()
 
 void SimulatedAnnealing::setAllOnZero()
 {
-	if (addParam.size() > 0)
+	if (tempFactor == 0)
 	{
-		tempFactor = addParam[0] / 1000;
-	}
-	else
-	{
-		if (tempFactor == 0)
-		{
-			tempFactor = (double)0.98;
-		}
+		tempFactor = (double)0.98;
 	}
 	bestWay.clear();
 	initializeVecror(bestWay, graph.N);
@@ -65,9 +57,10 @@ void SimulatedAnnealing::simAnn()
 	//int orderNotChanged = 0;
 
 	tmpWay = bestWay;
-	while (this->maxTimer > this->timer.getTimeFromStart())
+	while (this->maxTimer > this->timer.getTimeFromStart())////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//while (this->maxTimer > this->timer.getTimeFromStart()&& (double)temperature >= (double)1/RAND_MAX)
 	{
-
+		//orderNotChanged++;
 		int randNode1 = rand() % (graph.N - 1) + 1;
 		int randNode2 = rand() % (graph.N - 1) + 1;
 		while (randNode1 == randNode2)
@@ -77,15 +70,17 @@ void SimulatedAnnealing::simAnn()
 		std::vector<int> vec = tmpWay;
 		swap(vec, getNodeIndex(vec, randNode1), getNodeIndex(vec, randNode2));
 		int delta = getWayValue(vec) - getWayValue(tmpWay);
-		if (delta <= 0)
+		if (delta < 0)
 		{
 			tmpWay = vec;
+
 			countOperation = this->timer.getTimeFromStart();
+			//std::cout << orderNotChanged << " " << delta << " " << countOperation << " " << getWayValue(tmpWay) << std::endl;
 			//orderNotChanged = 0;
 		}
 		else
 		{
-			if ((double)100*(pow(M_E,(-(delta/temperature)))) > (double)(rand() % (100) + 1))
+			if (pow(M_E,(-(delta/temperature))) > (double)(rand() / RAND_MAX))
 			{
 				tmpWay = vec;
 				countOperation = this->timer.getTimeFromStart();
@@ -102,7 +97,7 @@ void SimulatedAnnealing::simAnn2()
 	int orderNotChanged = 100;
 
 	tmpWay = bestWay;
-	while (this->maxTimer > this->timer.getTimeFromStart())
+	while (this->maxTimer > this->timer.getTimeFromStart() && temperature >= 1/RAND_MAX)
 	{
 		for (int i3 = 0; i3 < sqrt(bestWay.size()) && this->maxTimer > this->timer.getTimeFromStart(); i3++)
 		{

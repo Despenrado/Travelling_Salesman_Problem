@@ -75,7 +75,7 @@ void ConsoleUI::mainMenu()
 	}
 	if (s._Equal("0"))
 	{
-			exit(0);
+		return;
 	}
 	if (!s._Equal("0") && !s._Equal("1") && !s._Equal("2") && !s._Equal("3") && !s._Equal("4") && !s._Equal("5") && !s._Equal("6"))
 	{
@@ -89,9 +89,9 @@ void ConsoleUI::algorithmsListMenu()
 	cout << "Algorithm Menu" << endl
 		<< "1 - Brure Force" << endl
 		<< "2 - Branch And Bound" << endl
-		<< "3 - Tabu Search dafault" << endl
+		<< "3 - Tabu Search" << endl
 		<< "4 - Simulated Annealing" << endl
-		<< "5 - Tabu search anothe" << endl
+		<< "5 - Genetic" << endl
 		<< "0 - Go Back" << endl;
 	string s = cinConsole();
 	if (s._Equal("1"))
@@ -100,7 +100,22 @@ void ConsoleUI::algorithmsListMenu()
 	}
 	if (s._Equal("3"))
 	{
-		algorithmMenu(new TabuSearch(graph, 8, true));
+		cout << "0 default; 1 - another" << endl;
+		switch (stoi(cinConsole()))
+		{
+		case 0: 
+		{
+			algorithmMenu(new TabuSearch(graph, 8, true));
+		}
+		case 1:
+		{
+			algorithmMenu(new TabuSearch(graph, 8, false));
+		}
+		default: {
+			cout << "try again" << endl;
+		}
+		}
+		
 	}
 	if (s._Equal("2"))
 	{
@@ -112,13 +127,13 @@ void ConsoleUI::algorithmsListMenu()
 	}
 	if (s._Equal("5"))
 	{
-		algorithmMenu(new TabuSearch(graph, 8, false));
+		algorithmMenu(new Genetic(graph));
 	}
 	if (s._Equal("0"))
 	{
 		return;
 	}
-	if (!s._Equal("0") && !s._Equal("1") && !s._Equal("2") && !s._Equal("3") && !s._Equal("4"))
+	if (!s._Equal("0") && !s._Equal("1") && !s._Equal("2") && !s._Equal("3") && !s._Equal("4") && !s._Equal("5"))
 	{
 		cout << "	Wrong value!" << endl;
 	}
@@ -163,6 +178,10 @@ void ConsoleUI::algorithmMenu(Algorithm* alg)
 		{
 			cout << "6 - Set Temperature" << endl;
 		}
+		if (alg->fileName == "Genetic")
+		{
+			cout << "6 - Set Properties" << endl;
+		}
 		cout << "0 - Go Back" << std::endl;
 		std::cout << "$:";
 		std::string s;
@@ -202,6 +221,22 @@ void ConsoleUI::algorithmMenu(Algorithm* alg)
 				cout << "Enter a*1000" << endl;
 				alg->addParam.push_back(stoi(cinConsole()));
 			}
+			if (alg->fileName == "Genetic")
+			{
+				cout << "Enter populationMaxSize" << endl;
+				alg->addParam.push_back(stoi(cinConsole()));
+				cout << "Enter crosoverQuantity" << endl;
+				alg->addParam.push_back(stoi(cinConsole()));
+				cout << "Enter crosoverPoint" << endl;
+				alg->addParam.push_back(stoi(cinConsole()));
+				cout << "Enter mutationQuantity" << endl;
+				alg->addParam.push_back(stoi(cinConsole()));
+				cout << "Enter newRandQuantity" << endl;
+				alg->addParam.push_back(stoi(cinConsole()));
+				cout << "Enter mutationType" << endl;
+				alg->addParam.push_back(stoi(cinConsole()));
+
+			}
 		}
 		if (s._Equal("0"))
 		{
@@ -224,7 +259,7 @@ void ConsoleUI::testsMenu()
 		<< "2 - Branch And Bound" << endl
 		<< "3 - Tabu Search" << endl
 		<< "4 - Simulated Annealing" << endl
-		<< "5 - " << std::endl
+		<< "5 - Genetic" << endl
 		<< "0 - Go Back" << std::endl;
 	std::cout << "$:";
 	std::string s;
@@ -267,7 +302,22 @@ void ConsoleUI::testsMenu()
 	}
 	if (s._Equal("5"))
 	{
-
+		tests.param.clear();
+		cout << "Enter populationMaxSize" << endl;
+		tests.param.push_back(stoi(cinConsole()));
+		cout << "Enter crosoverQuantity" << endl;
+		tests.param.push_back(stoi(cinConsole()));
+		cout << "Enter crosoverPoint" << endl;
+		tests.param.push_back(stoi(cinConsole()));
+		cout << "Enter mutationQuantity" << endl;
+		tests.param.push_back(stoi(cinConsole()));
+		cout << "Enter newRandQuantity" << endl;
+		tests.param.push_back(stoi(cinConsole()));
+		cout << "Enter mutationType" << endl;
+		tests.param.push_back(stoi(cinConsole()));
+		tests.algorithmType = 5;
+		tests.algorithmThread();
+		tests.printResultsToFile();
 	}
 	if (s._Equal("0"))
 	{
@@ -294,7 +344,8 @@ void ConsoleUI::cinTestsProperies()
 		std::cin >> s;
 		if (s._Equal("1"))
 		{
-			tests.graph = new Graph(true);
+			tests.graph = Graph(true);
+			tests.numNodes = tests.graph.N;
 			break;
 		}
 		if (s._Equal("2"))
